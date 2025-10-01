@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Lokal - Tanpa Internet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .dashboard {
+            display: none;
+            text-align: center;
+        }
+
+        .profile-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .info-row {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: #333;
+            word-break: break-word;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .note {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e7f3ff;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #004085;
+            text-align: left;
+        }
+
+        .note strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Login Form -->
+        <div id="loginBox">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="contoh@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Masukkan password" required>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+            <div class="note">
+                <strong>Demo Account:</strong>
+                Email: admin@gmail.com<br>
+                Password: admin123<br><br>
+                <strong>Atau gunakan email pribadi Anda!</strong><br>
+                (Email apapun akan diterima untuk demo)
+            </div>
+        </div>
+        
+        <!-- Dashboard after login -->
+        <div class="dashboard" id="dashboard">
+            <div class="profile-icon">👤</div>
+            <div class="user-info">
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value" id="userEmail"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Login Time:</span>
+                    <span class="info-value" id="loginTime"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Status:</span>
+                    <span class="info-value" style="color: #28a745;">✓ Active</span>
+                </div>
+            </div>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        // Database user lokal (simulasi)
+        const users = {
+            'admin@gmail.com': 'admin123',
+            // Tambahkan user lain di sini jika perlu
+        };
+
+        let currentUser = null;
+
+        // Handle login form
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            // Validasi email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Format email tidak valid');
+                return;
+            }
+
+            // Mode 1: Cek user terdaftar
+            if (users[email]) {
+                if (users[email] === password) {
+                    loginSuccess(email);
+                } else {
+                    showError('Password salah');
+                }
+            } 
+            // Mode 2: Terima semua email (untuk demo)
+            else {
+                // Untuk demo, terima password apapun minimal 6 karakter
+                if (password.length >= 6) {
+                    loginSuccess(email);
+                } else {
+                    showError('Password minimal 6 karakter');
+                }
+            }
+        });
+
+        // Login berhasil
+        function loginSuccess(email) {
+            currentUser = {
+                email: email,
+                loginTime: new Date().toLocaleString('id-ID')
+            };
+            
+            showSuccess('Login berhasil!');
+            
+            setTimeout(() => {
+                showDashboard();
+            }, 1000);
+        }
+
+        // Tampilkan dashboard
+        function showDashboard() {
+            document.getElementById('loginBox').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            
+            document.getElementById('userEmail').textContent = currentUser.email;
+            document.getElementById('loginTime').textContent = currentUser.loginTime;
+        }
+
+        // Handle logout
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            currentUser = null;
+            document.getElementById('loginBox').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('loginForm').reset();
+            hideMessages();
+        });
+
+        // Tampilkan error
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Tampilkan success
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // Hide messages
+        function hideMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
